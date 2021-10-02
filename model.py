@@ -5,7 +5,7 @@
 # 数据集：./AnimeTest/，包含了 814 张二次元头像
 # 模型保存至 ./model/
 # 迭代生成的图片效果保存至 ./result/
-# 张志衡复现并添加注释，英语可能有纰漏，望谅解！
+# zhangzhihengcn 复现并添加英文注释，英语可能有纰漏，望谅解！
 
 import os
 import torch
