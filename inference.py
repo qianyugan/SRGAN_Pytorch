@@ -1,3 +1,5 @@
+# You can run this file to operate your own image
+
 import torch.nn as nn
 import torch.nn.functional as F
 import torch
