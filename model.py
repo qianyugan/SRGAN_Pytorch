@@ -1,11 +1,11 @@
 # 此模型源于论文：https://arxiv.org/pdf/1609.04802.pdf
 # 中文详解：https://perper.site/2019/03/01/SRGAN-%E8%AF%A6%E8%A7%A3/
 # 代码参考：https://blog.csdn.net/NikkiElwin/article/details/112910957?spm=1001.2014.3001.5501
-# 此模型是使用了 SRGAN 的超分辨率重构模型。
+# 此模型是基于 SRGAN 的超分辨率重构模型。
 # 数据集：./AnimeTest/，包含了 814 张二次元头像
 # 模型保存至 ./model/
 # 迭代生成的图片效果保存至 ./result/
-# zhangzhihengcn 复现并添加英文注释，英语可能有纰漏，望谅解！
+# zhangzhihengcn 复现并添加注释，英语可能有纰漏，望谅解！
 
 import os
 import torch
@@ -25,14 +25,11 @@ import torchvision.transforms as transforms
 # Image treatment: Crop images and transform to tensor
 transform = transforms.Compose([transforms.RandomCrop(96), transforms.ToTensor()])
 
-# Dataset path
-path = './AnimeTest/'
-
 
 class PreprocessDataset(Dataset):  # Meaning class PreprocessDataset inherit from class Dataset
     """Preprocess dataset"""
 
-    def __init__(self, imgPath=path, transforms=transform, ex=10):
+    def __init__(self, imgPath, transforms=transform, ex=10):
         """Initialize preprocess dataset"""
 
         self.transforms = transform
@@ -70,7 +67,7 @@ trainData = DataLoader(processDataset, batch_size=batch)
 
 # Construct iterator and take out one of samples
 dataiter = iter(trainData)
-testImgs, _ = dataiter.next()
+testImgs, labels = dataiter.next()
 # .next() function: get next element from iterator
 # "_" replaced the position of labels
 # If there is no sample in iterator, it will return StopIteration
@@ -109,7 +106,7 @@ class ResBlock(nn.Module):
     def forward(self, x):
         """Forward Spread"""
 
-        residual = x
+        resudial = x
 
         out = self.conv1(x)
         out = self.bn1(out)
@@ -121,7 +118,7 @@ class ResBlock(nn.Module):
 
         out = self.conv3(x)
 
-        out += residual
+        out += resudial
         out = self.relu(out)
 
         return out
@@ -155,7 +152,7 @@ class Generator(nn.Module):
         self.pixelShuffler2 = nn.PixelShuffle(2)
         self.reluPos2 = nn.PReLU()
 
-        self.finalConv = nn.Conv2d(64, 3, kernel_size=9, stride=1)
+        self.finConv = nn.Conv2d(64, 3, kernel_size=9, stride=1)
 
     def _makeLayer_(self, block, inChannels, outChannels, blocks):
         """Construct Residual Block"""
@@ -187,7 +184,7 @@ class Generator(nn.Module):
         out = self.pixelShuffler2(out)
         out = self.reluPos2(out)
 
-        out = self.finalConv(out)
+        out = self.finConv(out)
 
         return out
 
