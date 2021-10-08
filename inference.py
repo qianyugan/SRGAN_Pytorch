@@ -42,7 +42,7 @@ class ResBlock(nn.Module):
     def forward(self, x):
         """Forward Spread"""
 
-        residual = x
+        resudial = x
 
         out = self.conv1(x)
         out = self.bn1(out)
@@ -54,7 +54,7 @@ class ResBlock(nn.Module):
 
         out = self.conv3(x)
 
-        out += residual
+        out += resudial
         out = self.relu(out)
 
         return out
@@ -88,7 +88,7 @@ class Generator(nn.Module):
         self.pixelShuffler2 = nn.PixelShuffle(2)
         self.reluPos2 = nn.PReLU()
 
-        self.finalConv = nn.Conv2d(64, 3, kernel_size=9, stride=1)
+        self.finConv = nn.Conv2d(64, 3, kernel_size=9, stride=1)
 
     def _makeLayer_(self, block, inChannels, outChannels, blocks):
         """Construct Residual Block"""
@@ -120,7 +120,7 @@ class Generator(nn.Module):
         out = self.pixelShuffler2(out)
         out = self.reluPos2(out)
 
-        out = self.finalConv(out)
+        out = self.finConv(out)
 
         return out
 
