@@ -5,7 +5,7 @@
 # 数据集：./AnimeTest/，包含了 814 张二次元头像
 # 模型保存至 ./model/
 # 迭代生成的图片效果保存至 ./result/
-# zhangzhihengcn 复现并添加注释，英语可能有纰漏，望谅解！
+# 张志衡复现并添加注释，英语可能有纰漏，望谅解！
 
 import os
 import torch
@@ -15,7 +15,6 @@ from PIL import Image
 import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
-import torch.nn.functional as F
 import torchvision.utils as vutils
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
@@ -58,7 +57,7 @@ class PreprocessDataset(Dataset):  # Meaning class PreprocessDataset inherit fro
 
 path = './AnimeTest/'
 device = torch.device('cuda:0' if torch.cuda.is_available() else "cpu")
-batch = 32  # batch is belong to class "quantity", not "size". DO NOT confuse it with "epochs"
+batch =  814 # batch is belong to class "quantity", not "size". DO NOT confuse it with "epochs"
 epochs = 100
 
 # Construct Dataset
@@ -132,14 +131,14 @@ class Generator(nn.Module):
 
         super(Generator, self).__init__()
         # Convolution Model 1
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=9, padding=4, padding_mode='reflect', stride=1)
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=9, stride=1, padding=4, padding_mode='reflect')
         self.relu = nn.PReLU()
 
         # Residual Model
         self.resBlock = self._makeLayer_(ResBlock, 64, 64, 5)
 
         # Convolution Model 2
-        self.conv2 = nn.Conv2d(64, 64, kernel_size=1, stride=1)
+        self.conv2 = nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1, padding_mode='reflect')
         self.bn2 = nn.BatchNorm2d(64)
         self.relu2 = nn.PReLU()
 
@@ -317,7 +316,7 @@ for epoch in range(epochs):
         plt.axis("off")
         # Hidden x, y, z... axis on figures
         fakeImgs = netG(testImgs).detach().cpu()
-        plt.imshow(np.transpose(vutils.make_grid(fakeImgs, padding=2, normalize=True), (1, 2, 0), animated=True))
+        plt.imshow(np.transpose(vutils.make_grid(fakeImgs, padding=2, normalize=True), (1, 2, 0)), animated=True)
         plt.savefig('./Img/Result_epoch % 05d.jpg' % epoch, bbox_inches='tight', pad_inches=0)
         print('[INFO] Images saved successfully!')
 
