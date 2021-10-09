@@ -68,14 +68,14 @@ class Generator(nn.Module):
 
         super(Generator, self).__init__()
         # Convolution Model 1
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=9, padding=4, padding_mode='reflect', stride=1)
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=9, stride=1, padding=4, padding_mode='reflect')
         self.relu = nn.PReLU()
 
         # Residual Model
         self.resBlock = self._makeLayer_(ResBlock, 64, 64, 5)
 
         # Convolution Model 2
-        self.conv2 = nn.Conv2d(64, 64, kernel_size=1, stride=1)
+        self.conv2 = nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1, padding_mode='reflect')
         self.bn2 = nn.BatchNorm2d(64)
         self.relu2 = nn.PReLU()
 
@@ -127,7 +127,7 @@ class Generator(nn.Module):
 
 device = torch.device("cpu")
 net = Generator()
-net.load_state_dict(torch.load("your model path", map_location=torch.device('cpu')))
+net.load_state_dict(torch.load("./model/netG_epoch_4_xx.pth", map_location=torch.device('cpu')))
 
 
 def imshow(path, sourceImg=True):
@@ -155,4 +155,4 @@ def imshow(path, sourceImg=True):
     img.save(path[:-4] + '_result.jpg')  # Save arrays as pictures
 
 
-imshow("your image path", sourceImg=True)
+imshow("./bxxx.jpg", sourceImg=True)
